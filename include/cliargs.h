@@ -11,6 +11,7 @@
 #include <memory>
 
 namespace cliargs{
+    class Visitor;
     class Constraint {
     public:
         Constraint() = default;
@@ -18,11 +19,13 @@ namespace cliargs{
         Constraint &operator=(const Constraint &) = delete;
         virtual ~Constraint() = default;
 
+        virtual void accept(Visitor* visitor) = 0;
         [[nodiscard]] virtual bool isValid() const = 0;
         [[nodiscard]] virtual bool isRequired() const = 0;
         [[nodiscard]] virtual std::string toString() const = 0;
-    };
 
+        friend class Visitor;
+    };
 
     class Argument: public Constraint{
     public:
@@ -61,6 +64,8 @@ namespace cliargs{
         [[nodiscard]] virtual std::string getShortId(const std::string &valueId) const;
         [[nodiscard]] virtual std::string getLongId(const std::string &valueId) const;
 
+        void accept(Visitor* visitor) override;
+
         virtual bool operator==(const Argument &a) const;
 
     private:
@@ -78,10 +83,8 @@ namespace cliargs{
 
         virtual GroupConstraint &add(std::unique_ptr<Constraint> constraint);
 
-        [[nodiscard]] std::vector<std::unique_ptr<Constraint>>::iterator begin();
-        [[nodiscard]] std::vector<std::unique_ptr<Constraint>>::iterator end();
-        [[nodiscard]] std::vector<std::unique_ptr<Constraint>>::const_iterator begin() const;
-        [[nodiscard]] std::vector<std::unique_ptr<Constraint>>::const_iterator end() const;
+        [[nodiscard]] std::vector<std::shared_ptr<Constraint>>::const_iterator begin() const;
+        [[nodiscard]] std::vector<std::shared_ptr<Constraint>>::const_iterator end() const;
 
     private:
         class Impl;
@@ -95,9 +98,10 @@ namespace cliargs{
         AnyOf(const AnyOf &) = delete;
         AnyOf &operator=(const AnyOf &) = delete;
 
+        void accept(Visitor* visitor) override;
         [[nodiscard]] bool isValid() const override;
-        [[nodiscard]] virtual bool isRequired() const override {return true;};
-        [[nodiscard]] virtual std::string toString() const {return std::string();};
+        [[nodiscard]] bool isRequired() const override;
+        [[nodiscard]] std::string toString() const override;
     };
 
 
@@ -107,6 +111,7 @@ namespace cliargs{
         OneOf(const AnyOf &) = delete;
         OneOf &operator=(const AnyOf &) = delete;
 
+        void accept(Visitor* visitor) override;
         [[nodiscard]] bool isValid() const override;
         GroupConstraint &add(std::unique_ptr<Constraint> argument) override;
     };

@@ -8,7 +8,7 @@ namespace cliargs {
 
     class GroupConstraint::Impl {
     public:
-        std::vector<std::unique_ptr<Constraint>> constraints;
+        std::vector<std::shared_ptr<Constraint>> constraints;
     };
 
     GroupConstraint &GroupConstraint::add(std::unique_ptr<Constraint> constraint) {
@@ -16,19 +16,11 @@ namespace cliargs {
         return *this;
     }
 
-    std::vector<std::unique_ptr<Constraint>>::iterator GroupConstraint::begin() {
-        return impl->constraints.begin();
-    }
-
-    std::vector<std::unique_ptr<Constraint>>::iterator GroupConstraint::end() {
-        return impl->constraints.end();
-    }
-
-    std::vector<std::unique_ptr<Constraint>>::const_iterator GroupConstraint::begin() const {
+    std::vector<std::shared_ptr<Constraint>>::const_iterator GroupConstraint::begin() const {
         return impl->constraints.cbegin();
     }
 
-    std::vector<std::unique_ptr<Constraint>>::const_iterator GroupConstraint::end() const {
+    std::vector<std::shared_ptr<Constraint>>::const_iterator GroupConstraint::end() const {
         return impl->constraints.cend();
     }
 

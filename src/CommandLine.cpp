@@ -3,14 +3,26 @@
 //
 
 #include "cliargs.h"
-#include <variant>
+#include "VisitorUtils.h"
+#include "Visitor.h"
 
 namespace cliargs{
-    using element = std::variant<const std::unique_ptr<Argument>, const std::unique_ptr<AnyOf>>;
+    class UniqueNameVisitor: public Visitor{
+    public:
+        void visit(const Argument* argument) override{
+            arguments.push_back(argument);
+        }
 
-    class UniqueNameVisitor {
+        void visit(const AnyOf* anyOf) override{
+            VisitorUtils::traverse(this, anyOf);
+        }
+
+        void visit(const OneOf* oneOf) override{
+            VisitorUtils::traverse(this, oneOf);
+        }
+
     private:
-        std::vector<Argument> arguments;
+        std::vector<const Argument*> arguments;
     };
 
     class UniqueName: public GroupConstraint {
@@ -21,10 +33,7 @@ namespace cliargs{
 
         [[nodiscard]] bool isValid() const override {
             UniqueNameVisitor visitor;
-            for(auto i = this->begin(), j = this->end(); i != j; ++i){
-                element root = *i;
-                std::visit(visitor, i);
-            }
+            VisitorUtils::traverse(&visitor, this);
         }
     };
 

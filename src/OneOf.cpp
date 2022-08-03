@@ -3,6 +3,7 @@
 //
 
 #include "cliargs.h"
+#include "Visitor.h"
 
 namespace cliargs {
     bool OneOf::isValid() const {
@@ -18,5 +19,9 @@ namespace cliargs {
         }
 
         return GroupConstraint::add(std::move(constraint));
+    }
+
+    void OneOf::accept(Visitor *visitor) {
+        visitor->visit(this);
     }
 }

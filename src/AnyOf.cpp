@@ -3,9 +3,18 @@
 //
 
 #include "cliargs.h"
+#include "Visitor.h"
 
 namespace cliargs {
     bool AnyOf::isValid() const {
         return true;
+    }
+
+    void AnyOf::accept(Visitor *visitor) {
+        visitor->visit(this);
+    }
+
+    bool AnyOf::isRequired() const {
+        return false;
     }
 } // cliargs
