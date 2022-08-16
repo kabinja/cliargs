@@ -6,7 +6,6 @@
 
 #include "cliargs.h"
 #include "Argument_p.h"
-#include "Visitor.h"
 
 namespace cliargs {
     inline Argument::Impl::Impl(Argument* interface,
@@ -179,10 +178,6 @@ namespace cliargs {
     bool cliargs::Argument::operator==(const cliargs::Argument &a) const {
         return (!impl->m_flag.empty() && impl->m_flag == a.impl->m_flag)
                || impl->m_name == a.impl->m_name;
-    }
-
-    void Argument::accept(Visitor *visitor) {
-        visitor->visit(this);
     }
 } //namespace cliargs
 

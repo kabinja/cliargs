@@ -13,7 +13,7 @@ add_library(cliargs
         src/exceptions.cpp
         src/VisitorUtils.cpp
         src/VisitorUtils.h
-        src/Visitor.h)
+        )
 
 target_include_directories(cliargs
         PUBLIC

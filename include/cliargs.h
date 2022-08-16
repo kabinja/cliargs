@@ -9,9 +9,9 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <variant>
 
 namespace cliargs{
-    class Visitor;
     class Constraint {
     public:
         Constraint() = default;
@@ -19,12 +19,9 @@ namespace cliargs{
         Constraint &operator=(const Constraint &) = delete;
         virtual ~Constraint() = default;
 
-        virtual void accept(Visitor* visitor) = 0;
         [[nodiscard]] virtual bool isValid() const = 0;
         [[nodiscard]] virtual bool isRequired() const = 0;
         [[nodiscard]] virtual std::string toString() const = 0;
-
-        friend class Visitor;
     };
 
     class Argument: public Constraint{
@@ -64,8 +61,6 @@ namespace cliargs{
         [[nodiscard]] virtual std::string getShortId(const std::string &valueId) const;
         [[nodiscard]] virtual std::string getLongId(const std::string &valueId) const;
 
-        void accept(Visitor* visitor) override;
-
         virtual bool operator==(const Argument &a) const;
 
     private:
@@ -98,7 +93,6 @@ namespace cliargs{
         AnyOf(const AnyOf &) = delete;
         AnyOf &operator=(const AnyOf &) = delete;
 
-        void accept(Visitor* visitor) override;
         [[nodiscard]] bool isValid() const override;
         [[nodiscard]] bool isRequired() const override;
         [[nodiscard]] std::string toString() const override;
@@ -111,10 +105,14 @@ namespace cliargs{
         OneOf(const AnyOf &) = delete;
         OneOf &operator=(const AnyOf &) = delete;
 
-        void accept(Visitor* visitor) override;
         [[nodiscard]] bool isValid() const override;
+        [[nodiscard]] bool isRequired() const override;
+        [[nodiscard]] std::string toString() const override;
+
         GroupConstraint &add(std::unique_ptr<Constraint> argument) override;
     };
+
+    using ConstraintVariant = std::variant<std::shared_ptr<Argument>, std::shared_ptr<AnyOf>, std::shared_ptr<OneOf>>;
 
     class ArgumentException : public std::exception {
     public:

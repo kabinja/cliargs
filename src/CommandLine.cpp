@@ -4,25 +4,28 @@
 
 #include "cliargs.h"
 #include "VisitorUtils.h"
-#include "Visitor.h"
 
 namespace cliargs{
-    class UniqueNameVisitor: public Visitor{
+    class UniqueNameVisitor{
     public:
-        void visit(const Argument* argument) override{
+        void operator()(const std::shared_ptr<Argument>& argument){
             arguments.push_back(argument);
         }
 
-        void visit(const AnyOf* anyOf) override{
-            VisitorUtils::traverse(this, anyOf);
+        void operator()(const std::shared_ptr<OneOf>& oneOf){
+            for(const auto& constraint: *oneOf){
+                std::visit(*this, VisitorUtils::asVariant(constraint));
+            }
         }
 
-        void visit(const OneOf* oneOf) override{
-            VisitorUtils::traverse(this, oneOf);
+        void operator()(const std::shared_ptr<AnyOf>& anyOf){
+            for(const auto& constraint: *anyOf){
+                std::visit(*this, VisitorUtils::asVariant(constraint));
+            }
         }
 
     private:
-        std::vector<const Argument*> arguments;
+        std::vector<std::shared_ptr<Argument>> arguments;
     };
 
     class UniqueName: public GroupConstraint {
@@ -33,7 +36,10 @@ namespace cliargs{
 
         [[nodiscard]] bool isValid() const override {
             UniqueNameVisitor visitor;
-            VisitorUtils::traverse(&visitor, this);
+
+            for(const auto& constraint: *this){
+                std::visit(visitor, VisitorUtils::asVariant(constraint));
+            }
         }
     };
 
@@ -64,6 +70,30 @@ namespace cliargs{
         std::vector<std::string> args(argc);
         for (int i = 0; i < argc; i++) args.emplace_back(argv[i]);
         impl->parse(args);
+    }
+
+    void CommandLine::setOutput(CommandLineOutput *co) {
+
+    }
+
+    std::string CommandLine::getVersion() const {
+        return {};
+    }
+
+    std::string CommandLine::getProgramName() const {
+        return {};
+    }
+
+    std::string CommandLine::getMessage() const {
+        return {};
+    }
+
+    bool CommandLine::hasHelpAndVersion() const {
+        return false;
+    }
+
+    void CommandLine::reset() {
+
     }
 
     void CommandLine::Impl::parse(std::vector<std::string> &args) {

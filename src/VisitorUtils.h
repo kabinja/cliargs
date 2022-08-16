@@ -11,7 +11,7 @@ namespace cliargs {
 
     class VisitorUtils {
     public:
-        static void traverse(Visitor* visitor, const GroupConstraint *groupConstraint);
+        static ConstraintVariant asVariant(const std::shared_ptr<Constraint>& constraint);
     };
 
 } // cliargs

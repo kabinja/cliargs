@@ -3,25 +3,27 @@
 //
 
 #include "cliargs.h"
-#include "Visitor.h"
 
 namespace cliargs {
     bool OneOf::isValid() const {
         return false;
     }
 
+    bool OneOf::isRequired() const {
+        return false;
+    }
+
+    std::string OneOf::toString() const {
+        return {};
+    }
+
     GroupConstraint &OneOf::add(std::unique_ptr<Constraint> constraint) {
         if (constraint->isRequired()) {
             throw SpecificationException(
-                    "Required arguments are not allowed"
-                    " in an exclusive grouping.",
+                    "Required arguments are not allowed in an exclusive grouping.",
                     constraint->toString());
         }
 
         return GroupConstraint::add(std::move(constraint));
-    }
-
-    void OneOf::accept(Visitor *visitor) {
-        visitor->visit(this);
     }
 }
