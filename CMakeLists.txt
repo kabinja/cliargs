@@ -1,20 +1,20 @@
 cmake_minimum_required(VERSION 3.22)
-project(cliargs)
+project(cliargs LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(cliargs
-        src/CommandLine.cpp
-        src/Argument.cpp
-        src/Argument_p.h
-        src/AnyOf.cpp
-        src/GroupConstraint.cpp
-        src/OneOf.cpp
-        src/exceptions.cpp
-        src/VisitorUtils.cpp
-        src/VisitorUtils.h
-        )
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-target_include_directories(cliargs
-        PUBLIC
-            ${CMAKE_CURRENT_SOURCE_DIR}/include)
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
+function(output_conan_include_dirs)
+    message(STATUS "INCLUDE DIRS:")
+    foreach(DIR ${GTEST_LIBRARY})
+        message(STATUS "\t${include_dir_str}${DIR}")
+    endforeach()
+endfunction()
+
+add_subdirectory(src)
+add_subdirectory(test)

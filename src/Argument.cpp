@@ -4,7 +4,7 @@
 
 #include <utility>
 
-#include "cliargs.h"
+#include "cliargs/cliargs.h"
 #include "Argument_p.h"
 
 namespace cliargs {

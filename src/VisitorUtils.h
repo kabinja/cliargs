@@ -5,7 +5,7 @@
 #ifndef CLIARGS_VISITORUTILS_H
 #define CLIARGS_VISITORUTILS_H
 
-#include "cliargs.h"
+#include "cliargs/cliargs.h"
 
 namespace cliargs {
         ConstraintVariant asVariant(const std::shared_ptr<Constraint>& constraint);
