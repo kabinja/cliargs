@@ -122,7 +122,7 @@ namespace cliargs{
                               const std::string& argumentId = "undefined",
                               const std::string& typeDescription = "Generic ArgException");
 
-        ~ArgumentException() noexcept override = default;
+        ~ArgumentException() noexcept override;
 
         [[nodiscard]] const char *what() const noexcept override;
 

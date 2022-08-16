@@ -45,6 +45,8 @@ namespace cliargs{
         return impl->m_typeDescription;
     }
 
+    ArgumentException::~ArgumentException() noexcept = default;
+
     SpecificationException::SpecificationException(const std::string &error, const std::string &argumentId)
     : ArgumentException(error, argumentId, std::string("Failure to build constraints specification")){}
 } // cliargs
