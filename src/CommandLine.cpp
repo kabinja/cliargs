@@ -14,13 +14,13 @@ namespace cliargs{
 
         void operator()(const std::shared_ptr<OneOf>& oneOf){
             for(const auto& constraint: *oneOf){
-                std::visit(*this, VisitorUtils::asVariant(constraint));
+                std::visit(*this, asVariant(constraint));
             }
         }
 
         void operator()(const std::shared_ptr<AnyOf>& anyOf){
             for(const auto& constraint: *anyOf){
-                std::visit(*this, VisitorUtils::asVariant(constraint));
+                std::visit(*this, asVariant(constraint));
             }
         }
 
@@ -38,7 +38,7 @@ namespace cliargs{
             UniqueNameVisitor visitor;
 
             for(const auto& constraint: *this){
-                std::visit(visitor, VisitorUtils::asVariant(constraint));
+                std::visit(visitor, asVariant(constraint));
             }
         }
     };

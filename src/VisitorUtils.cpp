@@ -6,7 +6,7 @@
 #include "VisitorUtils.h"
 
 namespace cliargs {
-    ConstraintVariant VisitorUtils::asVariant(const std::shared_ptr<Constraint>& constraint) {
+    ConstraintVariant asVariant(const std::shared_ptr<Constraint> &constraint) {
         if(auto p = std::dynamic_pointer_cast<std::shared_ptr<Argument>>(constraint)){
             return *p;
         }
