@@ -11,16 +11,14 @@ namespace cliargs {
     inline Argument::Impl::Impl(Argument* interface,
                                   std::string flag,
                                   std::string name,
-                                  std::string desc,
-                                  bool req,
-                                  bool valueRequired)
+                                  std::string desc)
             : m_interface(interface),
               m_flag(std::move(flag)),
               m_name(std::move(name)),
               m_description(std::move(desc)),
-              m_required(req),
+              m_required(true),
               m_requireLabel("required"),
-              m_valueRequired(valueRequired),
+              m_valueRequired(true),
               m_alreadySet(false),
               m_setBy(),
               m_ignorable(true),
@@ -31,23 +29,34 @@ namespace cliargs {
             throw(SpecificationException("Argument flag can only be one character long", m_interface->toString()));
         }
 
-        if (m_flag == cliargs::Argument::getStartFlag() || m_flag == cliargs::Argument::getStartName() || m_flag == " "){
+        if (m_flag == getStartFlag() || m_flag == getStartName() || m_flag == " "){
             throw(SpecificationException(
                     "Argument flag cannot be either '"
-                        + cliargs::Argument::getStartFlag() + "' or '"
-                        + cliargs::Argument::getStartName() + "' or a space.",
+                        + getStartFlag() + "' or '"
+                        + getStartName() + "' or a space.",
                     m_interface->toString()));
         }
     }
 
-    Argument::Argument(const std::string& flag, const std::string& name, const std::string& description, bool required, bool valueRequired){
-        impl = std::make_unique<Argument::Impl>(this, flag, name, description, required, valueRequired);
+    Argument::Argument(const std::string& flag, const std::string& name, const std::string& description){
+        impl = std::make_unique<Argument::Impl>(this, flag, name, description);
     }
 
     Argument::~Argument() = default;
 
-    bool Argument::isValid() const {
-        return true;
+    Argument &Argument::setRequired(bool required) {
+        impl->m_required = required;
+        return *this;
+    }
+
+    Argument &Argument::setValueRequired(bool required) {
+        impl->m_valueRequired = required;
+        return *this;
+    }
+
+    Argument &Argument::setAcceptMultipleValues(bool accept) {
+        impl->m_acceptsMultipleValues = accept;
+        return *this;
     }
 
     bool cliargs::Argument::isRequired() const {
@@ -63,31 +72,30 @@ namespace cliargs {
     }
 
     std::string cliargs::Argument::getDescription() const {
-        return getDescription(impl->m_required);
-    }
-
-    std::string cliargs::Argument::getDescription(bool required) const {
-        return (required ? "(" + impl->m_requireLabel + ") " : "") + impl->m_description;
+        return impl->m_description;
     }
 
     bool cliargs::Argument::isValueRequired() const {
         return impl->m_valueRequired;
     }
 
-    bool cliargs::Argument::isSet() const {
-        return impl->m_alreadySet;
+    bool cliargs::Argument::isAcceptsMultipleValues() const{
+        return impl->m_acceptsMultipleValues;
     }
 
-    const std::string &cliargs::Argument::getSetBy() const {
-        return impl->m_setBy;
+    std::string cliargs::Argument::toString() const {
+        std::string s;
+
+        if (!impl->m_flag.empty()) s += getStartFlag() + impl->m_flag + " ";
+
+        s += "(" + getStartName() + impl->m_name + ")";
+
+        return s;
     }
 
-    inline std::string Argument::getStartFlag() {
-        return "-";
-    }
-
-    inline std::string Argument::getStartName() {
-        return "--";
+    bool cliargs::Argument::operator==(const cliargs::Argument &a) const {
+        return (!impl->m_flag.empty() && impl->m_flag == a.impl->m_flag)
+               || impl->m_name == a.impl->m_name;
     }
 
     inline void cliargs::Argument::extractFlag(std::string &flag, std::string &value) {
@@ -106,78 +114,12 @@ namespace cliargs {
         }
     }
 
-    inline bool cliargs::Argument::allowMore() {
-        return false;
+    inline std::string cliargs::Argument::getStartFlag() {
+        return "-";
     }
 
-    bool cliargs::Argument::acceptsMultipleValues() {
-        return impl->m_acceptsMultipleValues;
-    }
-
-    void cliargs::Argument::reset() {
-        impl->m_alreadySet = false;
-    }
-
-    void cliargs::Argument::hideFromHelp(bool hide) {
-        impl->m_visibleInHelp = !hide;
-    }
-
-    bool cliargs::Argument::visibleInHelp() const {
-        return impl->m_visibleInHelp;
-    }
-
-    inline bool cliargs::Argument::hasLabel() const {
-        return true;
-    }
-
-    bool cliargs::Argument::matches(const std::string &argFlag) const {
-        return (argFlag == getStartFlag() + impl->m_flag && !impl->m_flag.empty())
-            || argFlag == getStartName() + impl->m_name;
-    }
-
-    std::string cliargs::Argument::toString() const {
-        std::string s;
-
-        if (!impl->m_flag.empty()) s += getStartFlag() + impl->m_flag + " ";
-
-        s += "(" + getStartName() + impl->m_name + ")";
-
-        return s;
-    }
-
-    std::string cliargs::Argument::getShortId(const std::string &valueId) const {
-        std::string id = impl->m_flag.empty() ? getStartName() + impl->m_name : getStartFlag() + impl->m_flag;
-
-        if (impl->m_valueRequired){
-            id += std::string(1, ' ') + valueId;
-        }
-
-        return id;
-    }
-
-    std::string cliargs::Argument::getLongId(const std::string &valueId) const {
-        std::string id;
-
-        if (!impl->m_flag.empty()) {
-            id += getStartFlag() + impl->m_flag;
-
-            if (impl->m_valueRequired){
-                id += std::string(1, ' ') + valueId;
-            }
-
-            id += ",  ";
-        }
-
-        id += getStartName() + impl->m_name;
-
-        if (impl->m_valueRequired) id += std::string(1, ' ') + valueId;
-
-        return id;
-    }
-
-    bool cliargs::Argument::operator==(const cliargs::Argument &a) const {
-        return (!impl->m_flag.empty() && impl->m_flag == a.impl->m_flag)
-               || impl->m_name == a.impl->m_name;
+    inline std::string cliargs::Argument::getStartName() {
+        return "--";
     }
 } //namespace cliargs
 

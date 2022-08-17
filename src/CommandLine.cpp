@@ -34,7 +34,7 @@ namespace cliargs{
         UniqueName(const UniqueName &) = delete;
         UniqueName &operator=(const UniqueName &) = delete;
 
-        [[nodiscard]] bool isValid() const override {
+        void validate() const {
             UniqueNameVisitor visitor;
 
             for(const auto& constraint: *this){

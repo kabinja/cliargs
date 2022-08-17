@@ -5,10 +5,6 @@
 #include "cliargs/cliargs.h"
 
 namespace cliargs {
-    bool OneOf::isValid() const {
-        return false;
-    }
-
     bool OneOf::isRequired() const {
         return false;
     }

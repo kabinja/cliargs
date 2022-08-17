@@ -19,7 +19,6 @@ namespace cliargs{
         Constraint &operator=(const Constraint &) = delete;
         virtual ~Constraint() = default;
 
-        [[nodiscard]] virtual bool isValid() const = 0;
         [[nodiscard]] virtual bool isRequired() const = 0;
         [[nodiscard]] virtual std::string toString() const = 0;
     };
@@ -28,40 +27,29 @@ namespace cliargs{
     public:
         Argument(const std::string& flag,
                  const std::string& name,
-                 const std::string& description,
-                 bool required = false,
-                 bool valueRequired = true);
+                 const std::string& description);
         Argument(const Argument &rhs) = delete;
         Argument &operator=(const Argument &rhs) = delete;
         ~Argument() override;
 
-        [[nodiscard]] bool isValid() const override;
+        Argument& setRequired(bool required);
+        Argument& setValueRequired(bool required);
+        Argument& setAcceptMultipleValues(bool accept);
+
         [[nodiscard]] bool isRequired() const override;
         [[nodiscard]] std::string toString() const override;
 
         [[nodiscard]] const std::string &getFlag() const;
         [[nodiscard]] const std::string &getName() const;
         [[nodiscard]] std::string getDescription() const;
-        [[nodiscard]] std::string getDescription(bool required) const;
         [[nodiscard]] bool isValueRequired() const;
-        [[nodiscard]] bool isSet() const;
-        [[nodiscard]] const std::string &getSetBy() const;
-
-        [[nodiscard]] static std::string getStartFlag();
-        [[nodiscard]] static std::string getStartName();
-        static void extractFlag(std::string &flag, std::string &value);
-
-        virtual bool allowMore();
-        virtual bool acceptsMultipleValues();
-        virtual void reset();
-        virtual void hideFromHelp(bool hide);
-        [[nodiscard]] virtual bool visibleInHelp() const;
-        [[nodiscard]] virtual bool hasLabel() const;
-        [[nodiscard]] virtual bool matches(const std::string &argFlag) const;
-        [[nodiscard]] virtual std::string getShortId(const std::string &valueId) const;
-        [[nodiscard]] virtual std::string getLongId(const std::string &valueId) const;
+        [[nodiscard]] bool isAcceptsMultipleValues() const;
 
         virtual bool operator==(const Argument &a) const;
+
+        static void extractFlag(std::string &flag, std::string &value);
+        [[nodiscard]] static std::string getStartFlag();
+        [[nodiscard]] static std::string getStartName();
 
     private:
         class Impl;
@@ -93,7 +81,6 @@ namespace cliargs{
         AnyOf(const AnyOf &) = delete;
         AnyOf &operator=(const AnyOf &) = delete;
 
-        [[nodiscard]] bool isValid() const override;
         [[nodiscard]] bool isRequired() const override;
         [[nodiscard]] std::string toString() const override;
     };
@@ -105,7 +92,6 @@ namespace cliargs{
         OneOf(const AnyOf &) = delete;
         OneOf &operator=(const AnyOf &) = delete;
 
-        [[nodiscard]] bool isValid() const override;
         [[nodiscard]] bool isRequired() const override;
         [[nodiscard]] std::string toString() const override;
 

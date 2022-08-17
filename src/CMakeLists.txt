@@ -1,4 +1,8 @@
-add_library(cliargs
+add_library(cliargs "")
+
+target_sources(
+        cliargs
+        PRIVATE
         CommandLine.cpp
         Argument.cpp
         Argument_p.h
@@ -7,6 +11,7 @@ add_library(cliargs
         OneOf.cpp
         exceptions.cpp
         VisitorUtils.cpp
-        VisitorUtils.h)
+        VisitorUtils.h
+)
 
 target_include_directories(cliargs PUBLIC include)

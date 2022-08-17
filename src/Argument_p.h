@@ -13,9 +13,7 @@ namespace cliargs{
         Impl(Argument* interface,
                    std::string flag,
                    std::string name,
-                   std::string description,
-                   bool required,
-                   bool valueRequired);
+                   std::string description);
 
         Argument* m_interface;
 
@@ -46,7 +44,7 @@ namespace cliargs{
         /**
          * Indicating whether the argument is required.
          */
-        const bool m_required;
+        bool m_required;
 
         /**
          * Label to be used in usage description.  Normally set to
