@@ -19,11 +19,7 @@ namespace cliargs {
               m_required(true),
               m_requireLabel("required"),
               m_valueRequired(true),
-              m_alreadySet(false),
-              m_setBy(),
-              m_ignorable(true),
-              m_acceptsMultipleValues(false),
-              m_visibleInHelp(true) {
+              m_acceptsMultipleValues(false) {
 
         if (m_flag.length() > 1){
             throw(SpecificationException("Argument flag can only be one character long", m_interface->toString()));

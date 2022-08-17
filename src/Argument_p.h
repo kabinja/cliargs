@@ -60,28 +60,9 @@ namespace cliargs{
         bool m_valueRequired;
 
         /**
-         * Indicates whether the argument has been set.
-         * Indicates that a value on the command line has matched the
-         * name/flag of this argument and the values have been set accordingly.
+         * Indicate weather this argument can accept more than one values
          */
-        bool m_alreadySet;
-
-        /** Indicates the value specified to set this flag (like -a or --all).
-         */
-        std::string m_setBy;
-
-        /**
-         * Whether this argument can be ignored, if desired.
-         */
-        bool m_ignorable;
-
         bool m_acceptsMultipleValues;
-
-        /**
-         * Indicates if the argument is visible in the help output (e.g.,
-         * when specifying --help).
-         */
-        bool m_visibleInHelp;
 
     private:
         std::weak_ptr<Argument> interface;
