@@ -7,5 +7,4 @@
 
 TEST(Smoke, First) {
     EXPECT_EQ(1, 1);
-
 }

@@ -7,7 +7,6 @@ add_library(cliargs
         OneOf.cpp
         exceptions.cpp
         VisitorUtils.cpp
-        VisitorUtils.h
-        ../test/argument_test.cpp)
+        VisitorUtils.h)
 
 target_include_directories(cliargs PUBLIC include)
