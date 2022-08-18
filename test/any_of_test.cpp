@@ -7,11 +7,11 @@
 
 using namespace cliargs;
 
-TEST(AnyOf, constructor) {
+TEST(AnyOfTest, TestConstructor) {
     AnyOf anyOf{};
 }
 
-TEST(AnyOf, add_single_argument) {
+TEST(AnyOfTest, TestAddSingleArgument) {
     AnyOf anyOf{};
     auto arg = std::make_unique<Argument>("f", "file", "Absolute path of the file");
     anyOf.add(std::move(arg));

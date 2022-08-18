@@ -13,4 +13,4 @@ target_link_libraries(cliargs_test
             GTest::gtest_main
             cliargs)
 
-add_test(cliargs_gtest cliargs_test)
+add_test(NAME Test COMMAND cliargs_test)

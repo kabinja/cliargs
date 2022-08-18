@@ -7,12 +7,12 @@
 
 using namespace cliargs;
 
-TEST(Argument, toString) {
+TEST(ArgumentTest, TestToString) {
     Argument argument("f", "file", "Absolute path of the file");
     EXPECT_EQ("-f (--file)", argument.toString());
 }
 
-TEST(Argument, default_properties) {
+TEST(ArgumentTest, TestDefaultProperties) {
     Argument argument("f", "file", "Absolute path of the file");
 
     EXPECT_EQ("f", argument.getFlag());
@@ -23,7 +23,7 @@ TEST(Argument, default_properties) {
     EXPECT_FALSE(argument.isAcceptsMultipleValues());
 }
 
-TEST(Argument, other_properties) {
+TEST(ArgumentTest, TestOtherProperties) {
     Argument argument("f", "file", "Absolute path of the file");
     argument.setRequired(false);
     argument.setValueRequired(false);

@@ -7,6 +7,6 @@
 
 using namespace cliargs;
 
-TEST(CommandLine, constructor) {
+TEST(CommandLineTest, TestConstructor) {
     CommandLine commandLine{};
 }
