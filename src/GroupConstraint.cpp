@@ -11,6 +11,12 @@ namespace cliargs {
         std::vector<std::shared_ptr<Constraint>> constraints;
     };
 
+    GroupConstraint::GroupConstraint() {
+        impl = std::make_unique<GroupConstraint::Impl>();
+    }
+
+    GroupConstraint::~GroupConstraint() = default;
+
     GroupConstraint &GroupConstraint::add(std::unique_ptr<Constraint> constraint) {
         impl->constraints.push_back(std::move(constraint));
         return *this;
@@ -23,5 +29,4 @@ namespace cliargs {
     std::vector<std::shared_ptr<Constraint>>::const_iterator GroupConstraint::end() const {
         return impl->constraints.cend();
     }
-
 } // namespace cliargs

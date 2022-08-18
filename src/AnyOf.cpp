@@ -5,10 +5,6 @@
 #include "cliargs/cliargs.h"
 
 namespace cliargs {
-    bool AnyOf::isRequired() const {
-        return false;
-    }
-
     std::string AnyOf::toString() const {
         return {};
     }

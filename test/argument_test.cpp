@@ -25,9 +25,9 @@ TEST(Argument, default_properties) {
 
 TEST(Argument, other_properties) {
     Argument argument("f", "file", "Absolute path of the file");
-    argument.setRequired(false)
-        .setValueRequired(false)
-        .setAcceptMultipleValues(true);
+    argument.setRequired(false);
+    argument.setValueRequired(false);
+    argument.setAcceptMultipleValues(true);
 
     EXPECT_EQ("f", argument.getFlag());
     EXPECT_EQ("file", argument.getName());

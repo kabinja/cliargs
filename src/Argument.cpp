@@ -40,23 +40,14 @@ namespace cliargs {
 
     Argument::~Argument() = default;
 
-    Argument &Argument::setRequired(bool required) {
-        impl->m_required = required;
-        return *this;
-    }
 
-    Argument &Argument::setValueRequired(bool required) {
+
+    void Argument::setValueRequired(bool required) {
         impl->m_valueRequired = required;
-        return *this;
     }
 
-    Argument &Argument::setAcceptMultipleValues(bool accept) {
+    void Argument::setAcceptMultipleValues(bool accept) {
         impl->m_acceptsMultipleValues = accept;
-        return *this;
-    }
-
-    bool cliargs::Argument::isRequired() const {
-        return impl->m_required;
     }
 
     const std::string &cliargs::Argument::getFlag() const {

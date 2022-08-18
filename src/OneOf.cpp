@@ -5,10 +5,6 @@
 #include "cliargs/cliargs.h"
 
 namespace cliargs {
-    bool OneOf::isRequired() const {
-        return false;
-    }
-
     std::string OneOf::toString() const {
         return {};
     }

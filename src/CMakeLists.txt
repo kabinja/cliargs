@@ -3,6 +3,7 @@ add_library(cliargs "")
 target_sources(
         cliargs
         PRIVATE
+        Constraint.cpp
         CommandLine.cpp
         Argument.cpp
         Argument_p.h

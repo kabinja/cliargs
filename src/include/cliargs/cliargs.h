@@ -14,13 +14,19 @@
 namespace cliargs{
     class Constraint {
     public:
-        Constraint() = default;
+        Constraint();
         Constraint(const Constraint &) = delete;
         Constraint &operator=(const Constraint &) = delete;
-        virtual ~Constraint() = default;
+        virtual ~Constraint();
 
-        [[nodiscard]] virtual bool isRequired() const = 0;
+        void setRequired(bool required);
+        [[nodiscard]] bool isRequired() const;
+
         [[nodiscard]] virtual std::string toString() const = 0;
+
+    private:
+        class Impl;
+        std::unique_ptr<Impl> impl;
     };
 
     class Argument: public Constraint{
@@ -32,11 +38,9 @@ namespace cliargs{
         Argument &operator=(const Argument &rhs) = delete;
         ~Argument() override;
 
-        Argument& setRequired(bool required);
-        Argument& setValueRequired(bool required);
-        Argument& setAcceptMultipleValues(bool accept);
+        void setValueRequired(bool required);
+        void setAcceptMultipleValues(bool accept);
 
-        [[nodiscard]] bool isRequired() const override;
         [[nodiscard]] std::string toString() const override;
 
         [[nodiscard]] const std::string &getFlag() const;
@@ -59,10 +63,10 @@ namespace cliargs{
 
     class GroupConstraint: public Constraint {
     public:
-        GroupConstraint() = default;
+        GroupConstraint();
         GroupConstraint(const GroupConstraint &) = delete;
         GroupConstraint &operator=(const GroupConstraint &) = delete;
-        ~GroupConstraint() override = default;
+        ~GroupConstraint() override;
 
         virtual GroupConstraint &add(std::unique_ptr<Constraint> constraint);
 
@@ -81,7 +85,6 @@ namespace cliargs{
         AnyOf(const AnyOf &) = delete;
         AnyOf &operator=(const AnyOf &) = delete;
 
-        [[nodiscard]] bool isRequired() const override;
         [[nodiscard]] std::string toString() const override;
     };
 
@@ -92,7 +95,6 @@ namespace cliargs{
         OneOf(const AnyOf &) = delete;
         OneOf &operator=(const AnyOf &) = delete;
 
-        [[nodiscard]] bool isRequired() const override;
         [[nodiscard]] std::string toString() const override;
 
         GroupConstraint &add(std::unique_ptr<Constraint> argument) override;
