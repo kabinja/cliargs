@@ -10,3 +10,13 @@ using namespace cliargs;
 TEST(AnyOf, constructor) {
     AnyOf anyOf{};
 }
+
+TEST(AnyOf, add_single_argument) {
+    AnyOf anyOf{};
+    auto arg = std::make_unique<Argument>("f", "file", "Absolute path of the file");
+    anyOf.add(std::move(arg));
+
+    for(const std::shared_ptr<Constraint>& constraint: anyOf){
+        EXPECT_EQ("-f (--file)", constraint->toString());
+    }
+}
