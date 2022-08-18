@@ -13,6 +13,8 @@ target_sources(
         exceptions.cpp
         VisitorUtils.cpp
         VisitorUtils.h
+        ParserUtils.cpp
+        ParserUtils.h
 )
 
 target_include_directories(cliargs PUBLIC include)

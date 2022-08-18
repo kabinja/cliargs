@@ -47,7 +47,7 @@ namespace cliargs{
     class CommandLine::Impl {
     public:
         std::vector<std::shared_ptr<Argument>> m_autoArguments;
-        std::vector<std::unique_ptr<Constraint>> m_constraints;
+        std::vector<std::shared_ptr<Constraint>> m_constraints;
 
 
         std::string m_progName;
@@ -61,9 +61,14 @@ namespace cliargs{
         void parse(std::vector<std::string> &args);
     };
 
-    CommandLine &CommandLine::add(std::unique_ptr<Constraint> constraint) {
+    CommandLine::CommandLine() {
+        impl = std::make_unique<CommandLine::Impl>();
+    }
+
+    CommandLine::~CommandLine() = default;
+
+    void CommandLine::add(std::shared_ptr<Constraint> constraint) {
         impl->m_constraints.push_back(std::move(constraint));
-        return *this;
     }
 
     void CommandLine::parse(int argc, const char *const *argv) {

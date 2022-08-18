@@ -50,11 +50,6 @@ namespace cliargs{
         [[nodiscard]] bool isAcceptsMultipleValues() const;
 
         virtual bool operator==(const Argument &a) const;
-
-        static void extractFlag(std::string &flag, std::string &value);
-        [[nodiscard]] static std::string getStartFlag();
-        [[nodiscard]] static std::string getStartName();
-
     private:
         class Impl;
         std::unique_ptr<Impl> impl;
@@ -133,8 +128,7 @@ namespace cliargs{
     public:
         ~CommandLineInterface() = default;
 
-        CommandLineInterface virtual &add(std::shared_ptr<Argument>) = 0;
-
+        virtual void add(std::shared_ptr<Constraint>) = 0;
         virtual void parse(int argc, const char *const *argv) = 0;
         virtual void setOutput(CommandLineOutput *co) = 0;
         virtual void reset() = 0;
@@ -156,7 +150,13 @@ namespace cliargs{
 
     class CommandLine: public CommandLineInterface{
     public:
-        CommandLine &add(std::unique_ptr<Constraint> constraint);
+        CommandLine();
+        CommandLine(const AnyOf &) = delete;
+        CommandLine(const CommandLine &) = delete;
+        CommandLine &operator=(const CommandLine &) = delete;
+        ~CommandLine();
+
+        void add(std::shared_ptr<Constraint> constraint) override;
         void parse(int argc, const char *const *argv) override;
         void setOutput(CommandLineOutput *co) override;
         [[nodiscard]] std::string getVersion() const override;

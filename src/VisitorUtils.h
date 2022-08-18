@@ -8,7 +8,7 @@
 #include "cliargs/cliargs.h"
 
 namespace cliargs {
-        ConstraintVariant asVariant(const std::shared_ptr<Constraint>& constraint);
+    [[nodiscard]] ConstraintVariant asVariant(const std::shared_ptr<Constraint>& constraint);
 } // cliargs
 
 #endif //CLIARGS_VISITORUTILS_H
