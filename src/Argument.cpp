@@ -14,11 +14,7 @@ namespace cliargs {
             : m_interface(interface),
               m_flag(std::move(flag)),
               m_name(std::move(name)),
-              m_description(std::move(desc)),
-              m_required(true),
-              m_requireLabel("required"),
-              m_valueRequired(true),
-              m_acceptsMultipleValues(false) {
+              m_description(std::move(desc)) {
 
         if (m_flag.length() > 1){
             throw(SpecificationException("Argument flag can only be one character long", m_interface->toString()));
@@ -38,8 +34,6 @@ namespace cliargs {
     }
 
     Argument::~Argument() = default;
-
-
 
     void Argument::setValueRequired(bool required) {
         impl->m_valueRequired = required;

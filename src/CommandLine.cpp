@@ -2,63 +2,29 @@
 // Created by renaud.rwemalika on 7/6/2022.
 //
 
+#include <utility>
+
 #include "cliargs/cliargs.h"
-#include "VisitorUtils.h"
+#include "validators.h"
 
 namespace cliargs{
-    class UniqueNameVisitor{
-    public:
-        void operator()(const std::shared_ptr<Argument>& argument){
-            arguments.push_back(argument);
-        }
-
-        void operator()(const std::shared_ptr<OneOf>& oneOf){
-            for(const auto& constraint: *oneOf){
-                std::visit(*this, asVariant(constraint));
-            }
-        }
-
-        void operator()(const std::shared_ptr<AnyOf>& anyOf){
-            for(const auto& constraint: *anyOf){
-                std::visit(*this, asVariant(constraint));
-            }
-        }
-
-    private:
-        std::vector<std::shared_ptr<Argument>> arguments;
-    };
-
-    class UniqueName: public GroupConstraint {
-    public:
-        UniqueName() = default;
-        UniqueName(const UniqueName &) = delete;
-        UniqueName &operator=(const UniqueName &) = delete;
-
-        void validate() const {
-            UniqueNameVisitor visitor;
-
-            for(const auto& constraint: *this){
-                std::visit(visitor, asVariant(constraint));
-            }
-        }
-    };
-
-
     class CommandLine::Impl {
     public:
-        std::vector<std::shared_ptr<Argument>> m_autoArguments;
-        std::vector<std::shared_ptr<Constraint>> m_constraints;
-
-
-        std::string m_progName;
+        std::shared_ptr<OneOf> m_root = std::make_shared<OneOf>();
+        std::string m_name;
         std::string m_message;
         std::string m_version;
-        int m_minimumNumberArguments;
-        char m_delimiter;
-        CommandLineOutput *m_output;
-        bool m_handleExceptions;
+        std::shared_ptr<CommandLineOutput> m_output = nullptr;
 
-        void parse(std::vector<std::string> &args);
+        Impl() {
+            m_root->add(std::make_unique<AnyOf>());
+        }
+
+        void parse(const std::vector<std::string> &args);
+
+        void add(std::unique_ptr<Constraint> constraint){
+            std::static_pointer_cast<AnyOf>(*m_root->begin())->add(std::move(constraint));
+        }
     };
 
     CommandLine::CommandLine() {
@@ -67,8 +33,8 @@ namespace cliargs{
 
     CommandLine::~CommandLine() = default;
 
-    void CommandLine::add(std::shared_ptr<Constraint> constraint) {
-        impl->m_constraints.push_back(std::move(constraint));
+    void CommandLine::add(std::unique_ptr<Constraint> constraint) {
+        impl->add(std::move(constraint));
     }
 
     void CommandLine::parse(int argc, const char *const *argv) {
@@ -77,31 +43,42 @@ namespace cliargs{
         impl->parse(args);
     }
 
-    void CommandLine::setOutput(CommandLineOutput *co) {
-
+    void CommandLine::setOutput(std::shared_ptr<CommandLineOutput> output) {
+        impl->m_output = std::move(output);
     }
 
     std::string CommandLine::getVersion() const {
-        return {};
+        return impl->m_version;
     }
 
-    std::string CommandLine::getProgramName() const {
-        return {};
+    std::string CommandLine::getName() const {
+        return impl->m_name;
     }
 
     std::string CommandLine::getMessage() const {
-        return {};
+        return impl->m_message;
     }
 
-    bool CommandLine::hasHelpAndVersion() const {
-        return false;
+    bool CommandLine::hasVersion() const {
+        return !impl->m_version.empty();
+    }
+
+    void CommandLine::validate() const {
+        std::vector<std::unique_ptr<validators>> validators;
+        validators.push_back(std::make_unique<UniqueName>(impl->m_root));
+
+        for(const auto& validator: validators){
+            validator->validate();
+        }
+    }
+
+    void CommandLine::Impl::parse(const std::vector<std::string> &args) {
+        if(args.empty()){
+            throw ParserException("The command should have at least one implicit argument containing the name of the program.");
+        }
     }
 
     void CommandLine::reset() {
-
-    }
-
-    void CommandLine::Impl::parse(std::vector<std::string> &args) {
 
     }
 } // cliargs

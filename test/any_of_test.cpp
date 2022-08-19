@@ -20,3 +20,13 @@ TEST(AnyOfTest, TestAddSingleArgument) {
         EXPECT_EQ("-f (--file)", constraint->toString());
     }
 }
+
+TEST(AnyOfTest, TestAddSingleGroup) {
+    AnyOf anyOf{};
+    auto child = std::make_unique<AnyOf>();
+    anyOf.add(std::move(child));
+
+    for(const std::shared_ptr<Constraint>& constraint: anyOf){
+        EXPECT_EQ("", constraint->toString());
+    }
+}

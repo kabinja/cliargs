@@ -7,7 +7,7 @@
 #include "cliargs/cliargs.h"
 
 namespace cliargs{
-    class ArgumentException::Impl {
+    class CliException::Impl {
     public:
         std::string m_error;
         std::string m_argumentId;
@@ -19,34 +19,37 @@ namespace cliargs{
           m_typeDescription(std::move(typeDescription)) {}
     };
 
-    ArgumentException::ArgumentException(const std::string& error, const std::string& argumentId, const std::string& typeDescription)
+    CliException::CliException(const std::string& error, const std::string& argumentId, const std::string& typeDescription)
     : std::exception() {
-        impl = std::make_unique<ArgumentException::Impl>(error, argumentId, typeDescription);
+        impl = std::make_unique<CliException::Impl>(error, argumentId, typeDescription);
     }
 
-    const char *ArgumentException::what() const noexcept {
+    const char *CliException::what() const noexcept {
         static std::string ex;
         ex = impl->m_argumentId + " -- " + impl->m_error;
         return ex.c_str();
     }
 
-    std::string ArgumentException::error() const {
+    std::string CliException::error() const {
         return impl->m_error;
     }
 
-    std::string ArgumentException::argumentId() const {
+    std::string CliException::argumentId() const {
         if (impl->m_argumentId == "undefined")
             return " ";
         else
             return ("Argument: " + impl->m_argumentId);
     }
 
-    std::string ArgumentException::typeDescription() const {
+    std::string CliException::typeDescription() const {
         return impl->m_typeDescription;
     }
 
-    ArgumentException::~ArgumentException() noexcept = default;
+    CliException::~CliException() noexcept = default;
 
     SpecificationException::SpecificationException(const std::string &error, const std::string &argumentId)
-    : ArgumentException(error, argumentId, std::string("Failure to build constraints specification")){}
+    : CliException(error, argumentId, std::string("Failure to build constraints specification")){}
+
+    ParserException::ParserException(const std::string &error, const std::string &argumentId)
+    : CliException(error, argumentId, std::string("Failure to parse arguments")){}
 } // cliargs

@@ -18,6 +18,18 @@ namespace cliargs{
         Argument* m_interface;
 
         /**
+         * Indicates whether a value is required for the argument.
+         * Note that the value may be required but the argument/value
+         * combination may not be, as specified by _required.
+         */
+        bool m_valueRequired = true;
+
+        /**
+         * Indicate weather this argument can accept more than one values
+         */
+        bool m_acceptsMultipleValues = false;
+
+        /**
          * The single char flag used to identify the argument.
          * This value (preceded by a dash {-}), can be used to identify
          * an argument on the command line.  The _flag can be blank,
@@ -42,27 +54,10 @@ namespace cliargs{
         std::string m_description;
 
         /**
-         * Indicating whether the argument is required.
-         */
-        bool m_required;
-
-        /**
          * Label to be used in usage description.  Normally set to
          * "required", but can be changed when necessary.
          */
         std::string m_requireLabel;
-
-        /**
-         * Indicates whether a value is required for the argument.
-         * Note that the value may be required but the argument/value
-         * combination may not be, as specified by _required.
-         */
-        bool m_valueRequired;
-
-        /**
-         * Indicate weather this argument can accept more than one values
-         */
-        bool m_acceptsMultipleValues;
 
     private:
         std::weak_ptr<Argument> interface;

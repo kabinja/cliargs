@@ -49,7 +49,7 @@ namespace cliargs{
         [[nodiscard]] bool isValueRequired() const;
         [[nodiscard]] bool isAcceptsMultipleValues() const;
 
-        virtual bool operator==(const Argument &a) const;
+        bool operator==(const Argument &a) const;
     private:
         class Impl;
         std::unique_ptr<Impl> impl;
@@ -97,13 +97,13 @@ namespace cliargs{
 
     using ConstraintVariant = std::variant<std::shared_ptr<Argument>, std::shared_ptr<AnyOf>, std::shared_ptr<OneOf>>;
 
-    class ArgumentException : public std::exception {
+    class CliException : public std::exception {
     public:
-        explicit ArgumentException(const std::string& error = "undefined exception",
+        explicit CliException(const std::string& error = "undefined exception",
                               const std::string& argumentId = "undefined",
                               const std::string& typeDescription = "Generic ArgException");
 
-        ~ArgumentException() noexcept override;
+        ~CliException() noexcept override;
 
         [[nodiscard]] const char *what() const noexcept override;
 
@@ -117,38 +117,29 @@ namespace cliargs{
     };
 
 
-    class SpecificationException : public ArgumentException {
+    class SpecificationException : public CliException {
     public:
-        explicit SpecificationException(const std::string &error = "undefined exception",
-                                        const std::string &argumentId = "undefined");
-    };
-
-    class CommandLineOutput;
-    class CommandLineInterface {
-    public:
-        ~CommandLineInterface() = default;
-
-        virtual void add(std::shared_ptr<Constraint>) = 0;
-        virtual void parse(int argc, const char *const *argv) = 0;
-        virtual void setOutput(CommandLineOutput *co) = 0;
-        virtual void reset() = 0;
-        [[nodiscard]] virtual std::string getVersion() const = 0;
-        [[nodiscard]] virtual std::string getProgramName() const = 0;
-        [[nodiscard]] virtual std::string getMessage() const = 0;
-        [[nodiscard]] virtual bool hasHelpAndVersion() const = 0;
+        explicit SpecificationException(const std::string &error = "undefined specification exception", const std::string &argumentId = "undefined");
     };
 
 
+    class ParserException : public CliException {
+    public:
+        explicit ParserException(const std::string &error = "undefined parser exception", const std::string &argumentId = "undefined");
+    };
+
+
+    class CommandLine;
     class CommandLineOutput {
     public:
         virtual ~CommandLineOutput() = default;
 
-        virtual void usage(CommandLineInterface &c) = 0;
-        virtual void version(CommandLineInterface &c) = 0;
-        virtual void failure(CommandLineInterface &c, ArgumentException &e) = 0;
+        virtual void usage(const CommandLine &commandLine) = 0;
+        virtual void version(const CommandLine &commandLine) = 0;
+        virtual void failure(const CommandLine &commandLine, CliException &e) = 0;
     };
 
-    class CommandLine: public CommandLineInterface{
+    class CommandLine {
     public:
         CommandLine();
         CommandLine(const AnyOf &) = delete;
@@ -156,14 +147,16 @@ namespace cliargs{
         CommandLine &operator=(const CommandLine &) = delete;
         ~CommandLine();
 
-        void add(std::shared_ptr<Constraint> constraint) override;
-        void parse(int argc, const char *const *argv) override;
-        void setOutput(CommandLineOutput *co) override;
-        [[nodiscard]] std::string getVersion() const override;
-        [[nodiscard]] std::string getProgramName() const override;
-        [[nodiscard]] std::string getMessage() const override;
-        [[nodiscard]] bool hasHelpAndVersion() const override;
-        void reset() override;
+        void add(std::unique_ptr<Constraint> constraint);
+        void setOutput(std::shared_ptr<CommandLineOutput> output);
+        [[nodiscard]] std::string getVersion() const;
+        [[nodiscard]] std::string getName() const;
+        [[nodiscard]] std::string getMessage() const;
+        [[nodiscard]] bool hasVersion() const;
+
+        void validate() const;
+        void parse(int argc, const char *const *argv);
+        void reset();
 
     private:
         class Impl;

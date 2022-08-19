@@ -7,7 +7,7 @@
 namespace cliargs{
     class Constraint::Impl {
     public:
-        bool m_required = true;
+        bool m_required = false;
     };
 
     Constraint::Constraint() {

@@ -18,21 +18,21 @@ TEST(ArgumentTest, TestDefaultProperties) {
     EXPECT_EQ("f", argument.getFlag());
     EXPECT_EQ("file", argument.getName());
     EXPECT_EQ("Absolute path of the file", argument.getDescription());
-    EXPECT_TRUE(argument.isRequired());
+    EXPECT_FALSE(argument.isRequired());
     EXPECT_TRUE(argument.isValueRequired());
     EXPECT_FALSE(argument.isAcceptsMultipleValues());
 }
 
 TEST(ArgumentTest, TestOtherProperties) {
     Argument argument("f", "file", "Absolute path of the file");
-    argument.setRequired(false);
+    argument.setRequired(true);
     argument.setValueRequired(false);
     argument.setAcceptMultipleValues(true);
 
     EXPECT_EQ("f", argument.getFlag());
     EXPECT_EQ("file", argument.getName());
     EXPECT_EQ("Absolute path of the file", argument.getDescription());
-    EXPECT_FALSE(argument.isRequired());
+    EXPECT_TRUE(argument.isRequired());
     EXPECT_FALSE(argument.isValueRequired());
     EXPECT_TRUE(argument.isAcceptsMultipleValues());
 }

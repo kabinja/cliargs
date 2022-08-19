@@ -5,7 +5,7 @@
 #include "ParserUtils.h"
 
 namespace cliargs {
-    void cliargs::extractFlag(std::string &flag, std::string &value) {
+    void extractFlag(std::string &flag, std::string &value) {
         int stop = 0;
 
         for (int i = 0; static_cast<unsigned int>(i) < flag.length(); i++){
@@ -21,11 +21,11 @@ namespace cliargs {
         }
     }
 
-    std::string cliargs::getStartFlag() {
+    std::string getStartFlag() {
         return "-";
     }
 
-    std::string cliargs::getStartName() {
+    std::string getStartName() {
         return "--";
     }
 } // cliargs
