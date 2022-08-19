@@ -15,4 +15,13 @@ void cliargs::UniqueName::validate() {
     for(const auto& constraint: *m_root){
         std::visit(visitor, asVariant(constraint));
     }
+
+    for(auto it1 = visitor.begin(); visitor.end() != it1; ++it1){
+        auto it2 = it1;
+        for(++it2; it2 != visitor.end(); ++it2){
+            if(it1->get()->getName() == it2->get()->getName() || it1->get()->getFlag() == it2->get()->getFlag()){
+                throw ValidationException("Duplicated identifier", it2->get()->toString());
+            }
+        }
+    }
 }

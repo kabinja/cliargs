@@ -7,9 +7,22 @@
 
 using namespace cliargs;
 
+TEST(ArgumentTest, TestInvalidFlagNotAlphabetic) {
+    EXPECT_THROW(Argument("2", "file", "Absolute path of the file"), SpecificationException);
+}
+
+TEST(ArgumentTest, TestInvalidFlagNotSingleChar) {
+    EXPECT_THROW(Argument("fi", "file", "Absolute path of the file"), SpecificationException);
+}
+
 TEST(ArgumentTest, TestToString) {
     Argument argument("f", "file", "Absolute path of the file");
     EXPECT_EQ("-f (--file)", argument.toString());
+}
+
+TEST(ArgumentTest, TestToStringWithoutFlag) {
+    Argument argument( "file", "Absolute path of the file");
+    EXPECT_EQ("(--file)", argument.toString());
 }
 
 TEST(ArgumentTest, TestDefaultProperties) {

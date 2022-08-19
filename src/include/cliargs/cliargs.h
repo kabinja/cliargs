@@ -31,9 +31,8 @@ namespace cliargs{
 
     class Argument: public Constraint{
     public:
-        Argument(const std::string& flag,
-                 const std::string& name,
-                 const std::string& description);
+        Argument(const std::string& flag, const std::string& name, const std::string& description);
+        Argument(const std::string& name, const std::string& description);
         Argument(const Argument &rhs) = delete;
         Argument &operator=(const Argument &rhs) = delete;
         ~Argument() override;
@@ -122,6 +121,10 @@ namespace cliargs{
         explicit SpecificationException(const std::string &error = "undefined specification exception", const std::string &argumentId = "undefined");
     };
 
+    class ValidationException : public CliException {
+    public:
+        explicit ValidationException(const std::string &error = "undefined validation exception", const std::string &argumentId = "undefined");
+    };
 
     class ParserException : public CliException {
     public:

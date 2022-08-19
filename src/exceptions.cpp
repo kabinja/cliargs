@@ -48,8 +48,11 @@ namespace cliargs{
     CliException::~CliException() noexcept = default;
 
     SpecificationException::SpecificationException(const std::string &error, const std::string &argumentId)
-    : CliException(error, argumentId, std::string("Failure to build constraints specification")){}
+            : CliException(error, argumentId, std::string("Failure to build constraints specification")){}
 
     ParserException::ParserException(const std::string &error, const std::string &argumentId)
-    : CliException(error, argumentId, std::string("Failure to parse arguments")){}
+            : CliException(error, argumentId, std::string("Failure to parse arguments")){}
+
+    ValidationException::ValidationException(const std::string &error, const std::string &argumentId)
+            : CliException(error, argumentId, std::string("Failure during constraints validation")){}
 } // cliargs

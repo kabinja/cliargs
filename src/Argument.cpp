@@ -16,21 +16,27 @@ namespace cliargs {
               m_name(std::move(name)),
               m_description(std::move(desc)) {
 
-        if (m_flag.length() > 1){
-            throw(SpecificationException("Argument flag can only be one character long", m_interface->toString()));
-        }
+        if(!m_flag.empty()){
+            if (m_flag.length() > 1){
+                throw SpecificationException(
+                        "Argument flag can only be one character long",
+                        m_flag);
+            }
 
-        if (m_flag == getStartFlag() || m_flag == getStartName() || m_flag == " "){
-            throw(SpecificationException(
-                    "Argument flag cannot be either '"
-                        + getStartFlag() + "' or '"
-                        + getStartName() + "' or a space.",
-                    m_interface->toString()));
+            if (!std::isalpha(m_flag.at(0))){
+                throw SpecificationException(
+                        "When defined, flag of an argument must be an alphabetic character",
+                        m_flag);
+            }
         }
     }
 
     Argument::Argument(const std::string& flag, const std::string& name, const std::string& description){
         impl = std::make_unique<Argument::Impl>(this, flag, name, description);
+    }
+
+    Argument::Argument(const std::string &name, const std::string &description) {
+        impl = std::make_unique<Argument::Impl>(this, "", name, description);
     }
 
     Argument::~Argument() = default;
