@@ -18,6 +18,7 @@ namespace cliargs {
     GroupConstraint::~GroupConstraint() = default;
 
     GroupConstraint &GroupConstraint::add(std::unique_ptr<Constraint> constraint) {
+        constraint->setParent(this);
         impl->constraints.push_back(std::move(constraint));
         return *this;
     }

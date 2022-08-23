@@ -11,8 +11,8 @@ target_sources(
         exceptions.cpp
         GroupConstraint.cpp
         OneOf.cpp
-        ParserUtils.cpp
-        ParserUtils.h
+        Parser.cpp
+        Parser.h
         validators.h
         validators.cpp
         VisitorUtils.cpp

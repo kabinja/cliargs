@@ -8,6 +8,7 @@ namespace cliargs{
     class Constraint::Impl {
     public:
         bool m_required = false;
+        const Constraint* m_parent = nullptr;
     };
 
     Constraint::Constraint() {
@@ -22,5 +23,13 @@ namespace cliargs{
 
     bool Constraint::isRequired() const {
         return impl->m_required;
+    }
+
+    void Constraint::setParent(const Constraint* constraint) {
+        impl->m_parent = constraint;
+    }
+
+    const Constraint* Constraint::getParent() {
+        return impl->m_parent;
     }
 }//cliargs

@@ -4,7 +4,7 @@
 
 #include "cliargs/cliargs.h"
 #include "Argument_p.h"
-#include "ParserUtils.h"
+#include "Parser.h"
 
 namespace cliargs {
     inline Argument::Impl::Impl(Argument* interface,
@@ -72,9 +72,9 @@ namespace cliargs {
     std::string cliargs::Argument::toString() const {
         std::string s;
 
-        if (!impl->m_flag.empty()) s += getStartFlag() + impl->m_flag + " ";
+        if (!impl->m_flag.empty()) s += Parser::getStartFlag() + impl->m_flag + " ";
 
-        s += "(" + getStartName() + impl->m_name + ")";
+        s += "(" + Parser::getStartName() + impl->m_name + ")";
 
         return s;
     }

@@ -10,11 +10,20 @@
 namespace cliargs {
     [[nodiscard]] ConstraintVariant asVariant(const std::shared_ptr<Constraint>& constraint);
 
-    class CollectArgumentsVisitor {
+    class Visitor {
     public:
-        void operator()(const std::shared_ptr<Argument>& argument);
-        void operator()(const std::shared_ptr<OneOf>& oneOf);
-        void operator()(const std::shared_ptr<AnyOf>& anyOf);
+        virtual ~Visitor() = default;
+
+        virtual void operator()(const std::shared_ptr<Argument>& argument) = 0;
+        virtual void operator()(const std::shared_ptr<OneOf>& oneOf) = 0;
+        virtual void operator()(const std::shared_ptr<AnyOf>& anyOf) = 0;
+    };
+
+    class CollectArgumentsVisitor: public Visitor{
+    public:
+        void operator()(const std::shared_ptr<Argument>& argument) override;
+        void operator()(const std::shared_ptr<OneOf>& oneOf) override;
+        void operator()(const std::shared_ptr<AnyOf>& anyOf) override;
 
         [[nodiscard]] std::vector<std::shared_ptr<Argument>>::const_iterator begin() const;
         [[nodiscard]] std::vector<std::shared_ptr<Argument>>::const_iterator end() const;

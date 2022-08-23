@@ -6,6 +6,7 @@
 
 #include "cliargs/cliargs.h"
 #include "validators.h"
+#include "Parser.h"
 
 namespace cliargs{
     class CommandLine::Impl {
@@ -14,13 +15,12 @@ namespace cliargs{
         std::string m_name;
         std::string m_message;
         std::string m_version;
+        std::string m_executable;
         std::shared_ptr<CommandLineOutput> m_output = nullptr;
 
         Impl() {
             m_root->add(std::make_unique<AnyOf>());
         }
-
-        void parse(const std::vector<std::string> &args);
 
         void add(std::unique_ptr<Constraint> constraint){
             std::static_pointer_cast<AnyOf>(*m_root->begin())->add(std::move(constraint));
@@ -40,7 +40,9 @@ namespace cliargs{
     void CommandLine::parse(int argc, const char *const *argv) {
         std::vector<std::string> args(argc);
         for (int i = 0; i < argc; i++) args.emplace_back(argv[i]);
-        impl->parse(args);
+
+        Parser parser(impl->m_root, args);
+        parser.parse();
     }
 
     void CommandLine::setOutput(std::shared_ptr<CommandLineOutput> output) {
@@ -69,12 +71,6 @@ namespace cliargs{
 
         for(const auto& validator: validators){
             validator->validate();
-        }
-    }
-
-    void CommandLine::Impl::parse(const std::vector<std::string> &args) {
-        if(args.empty()){
-            throw ParserException("The command should have at least one implicit argument containing the name of the program.");
         }
     }
 

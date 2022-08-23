@@ -21,6 +21,8 @@ namespace cliargs{
 
         void setRequired(bool required);
         [[nodiscard]] bool isRequired() const;
+        void setParent(const Constraint* parent);
+        [[nodiscard]] const Constraint* getParent();
 
         [[nodiscard]] virtual std::string toString() const = 0;
 
@@ -90,7 +92,6 @@ namespace cliargs{
         OneOf &operator=(const AnyOf &) = delete;
 
         [[nodiscard]] std::string toString() const override;
-
         GroupConstraint &add(std::unique_ptr<Constraint> argument) override;
     };
 
