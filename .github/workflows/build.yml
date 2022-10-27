@@ -4,9 +4,6 @@ on:
   push:
     branches: [ master ]
 
-env:
-  BUILD_TYPE: Debug
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -39,7 +36,8 @@ jobs:
       run:  |
             cmake -S ${{github.workspace}} \
             -B ${{github.workspace}}/build \
-            -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DTest=ON
       shell: bash
       env:
        CC:   gcc-10
