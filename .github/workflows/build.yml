@@ -19,12 +19,11 @@ jobs:
              sudo apt install gcc-10 g++-10
       shell: bash
 
-    - name: Conan installation
-      id: conan
-      uses: turtlebrowser/get-conan@v1.0
-
-    - name: Conan version
-      run: echo "${{ steps.conan.outputs.version }}"
+    - name: gcovr installation
+      id: gcovr
+      run:  |
+            pip install conan
+      shell: bash
 
     - name: gcovr installation
       id: gcovr
