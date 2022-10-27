@@ -19,8 +19,8 @@ jobs:
              sudo apt install gcc-10 g++-10
       shell: bash
 
-    - name: gcovr installation
-      id: gcovr
+    - name: conan installation
+      id: conan
       run:  |
             pip install conan
       shell: bash
