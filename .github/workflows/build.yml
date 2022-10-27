@@ -62,4 +62,4 @@ jobs:
         file-name: coverage.svg
         badge-branch: badges
         github-token: '${{ secrets.GITHUB_TOKEN }}'
-        coverage-file-name: ${{github.workspace}}/build/coverage.xml
+        coverage-file-name: ${{github.workspace}}/build/coverage/coverage.xml
