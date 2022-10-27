@@ -1,8 +1,8 @@
-name: CMake
+name: Test Toolchain
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -18,13 +18,13 @@ jobs:
              sudo apt install gcc-10 g++-10
       shell: bash
 
-    - name: conan installation
+    - name: Get Conan
       id: conan
       run:  |
             pip install conan
       shell: bash
 
-    - name: gcovr installation
+    - name: Get Gcovr
       id: gcovr
       run:  |
             pip install gcovr
