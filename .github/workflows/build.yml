@@ -9,9 +9,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
+    - name: Checkout
+      uses: actions/checkout@v3
 
     - name: Get GCC-10
       run:   |
@@ -49,7 +48,8 @@ jobs:
       working-directory: ${{github.workspace}}/build
       run: ctest -C Debug && gcovr -r ../ . --cobertura-pretty > coverage.xml
 
-    - uses: action-badges/create-orphan-branch@0.1.0
+    - name: Create Orphan Branch
+      uses: action-badges/create-orphan-branch@0.1.0
       with:
         branch-name: badges
 
