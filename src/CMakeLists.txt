@@ -20,3 +20,14 @@ target_sources(
 )
 
 target_include_directories(cliargs PUBLIC include)
+
+target_link_libraries(cliargs gcov)
+
+if (CMAKE_COMPILER_IS_GNUCXX)
+    include(${CMAKE_BINARY_DIR}/CodeCoverage.cmake)
+    append_coverage_compiler_flags()
+
+    # Turn off optimization for non-skewed coverage reports
+    set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -O0")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
+endif()

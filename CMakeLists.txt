@@ -13,6 +13,15 @@ if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
             TLS_VERIFY ON)
 endif()
 
+if(test)
+    if(NOT EXISTS "${CMAKE_BINARY_DIR}/CodeCoverage.cmake")
+        message(STATUS "Downloading CodeCoverage.cmake from https://github.com/bilke/cmake-modules")
+        file(DOWNLOAD "https://raw.githubusercontent.com/bilke/cmake-modules/master/CodeCoverage.cmake"
+                "${CMAKE_BINARY_DIR}/CodeCoverage.cmake"
+                TLS_VERIFY ON)
+    endif()
+endif()
+
 include(${CMAKE_BINARY_DIR}/conan.cmake)
 
 conan_cmake_configure(REQUIRES gtest/1.12.1 GENERATORS cmake)
@@ -27,7 +36,9 @@ conan_cmake_install(PATH_OR_REFERENCE .
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-enable_testing()
-
 add_subdirectory(src)
-add_subdirectory(test)
+
+if(test)
+    enable_testing()
+    add_subdirectory(test)
+endif()
