@@ -43,11 +43,11 @@ jobs:
        CXX:  g++-10
 
     - name: Cmake build
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      run: cmake --build ${{github.workspace}}/build --config Debug
 
     - name: Cmake test
       working-directory: ${{github.workspace}}/build
-      run: ctest -C ${{env.BUILD_TYPE}} && gcovr -r ../ . --cobertura-pretty > coverage.xml
+      run: ctest -C Debug && gcovr -r ../ . --cobertura-pretty > coverage.xml
 
     - uses: action-badges/create-orphan-branch@0.1.0
       with:
